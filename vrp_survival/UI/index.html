@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Stress System HUD</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Root Container - Fixed overlay covering entire viewport -->
+    <div id="hud-container" class="hud-root">
+        <!-- Main HUD Wrapper - Bottom center positioned -->
+        <div class="hud-wrapper">
+            <!-- Vitals Container - Horizontal flex layout -->
+            <div class="vitals-container">
+                <!-- Health Vital -->
+                <div class="vital-ring" data-vital="health">
+                    <div class="vital-container">
+                        <svg class="progress-ring" viewBox="0 0 60 60">
+                            <circle class="progress-ring-bg" cx="30" cy="30" r="26"></circle>
+                            <circle class="progress-ring-fill" cx="30" cy="30" r="26"></circle>
+                        </svg>
+                        <div class="vital-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div class="vital-value">100</div>
+                        <div class="low-warning"></div>
+                    </div>
+                </div>
+
+                <!-- Armor Vital -->
+                <div class="vital-ring" data-vital="armor">
+                    <div class="vital-container">
+                        <svg class="progress-ring" viewBox="0 0 60 60">
+                            <circle class="progress-ring-bg" cx="30" cy="30" r="26"></circle>
+                            <circle class="progress-ring-fill" cx="30" cy="30" r="26"></circle>
+                        </svg>
+                        <div class="vital-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="vital-value">100</div>
+                        <div class="low-warning"></div>
+                    </div>
+                </div>
+
+                <!-- Food Vital (Hunger) -->
+                <div class="vital-ring" data-vital="food">
+                    <div class="vital-container">
+                        <svg class="progress-ring" viewBox="0 0 60 60">
+                            <circle class="progress-ring-bg" cx="30" cy="30" r="26"></circle>
+                            <circle class="progress-ring-fill" cx="30" cy="30" r="26"></circle>
+                        </svg>
+                        <div class="vital-icon">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <div class="vital-value">50</div>
+                        <div class="low-warning"></div>
+                    </div>
+                </div>
+
+                <!-- Water Vital (Thirst) -->
+                <div class="vital-ring" data-vital="water">
+                    <div class="vital-container">
+                        <svg class="progress-ring" viewBox="0 0 60 60">
+                            <circle class="progress-ring-bg" cx="30" cy="30" r="26"></circle>
+                            <circle class="progress-ring-fill" cx="30" cy="30" r="26"></circle>
+                        </svg>
+                        <div class="vital-icon">
+                            <i class="fas fa-tint"></i>
+                        </div>
+                        <div class="vital-value">100</div>
+                        <div class="low-warning"></div>
+                    </div>
+                </div>
+
+                <!-- Stress Vital -->
+                <div class="vital-ring" data-vital="stress">
+                    <div class="vital-container">
+                        <svg class="progress-ring" viewBox="0 0 60 60">
+                            <circle class="progress-ring-bg" cx="30" cy="30" r="26"></circle>
+                            <circle class="progress-ring-fill" cx="30" cy="30" r="26"></circle>
+                        </svg>
+                        <div class="vital-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="vital-value">0</div>
+                        <div class="low-warning"></div>
+                    </div>
+                </div>
+
+                <!-- shower Vital -->
+                <div class="vital-ring" data-vital="shower">
+                    <div class="vital-container">
+                        <svg class="progress-ring" viewBox="0 0 60 60">
+                            <circle class="progress-ring-bg" cx="30" cy="30" r="26"></circle>
+                            <circle class="progress-ring-fill" cx="30" cy="30" r="26"></circle>
+                        </svg>
+                        <div class="vital-icon">
+                            <i class="fas fa-shower"></i>
+                        </div>
+                        <div class="vital-value">100</div>
+                        <div class="low-warning"></div>
+                    </div>
+                </div>
+
+                <!-- pee Vital -->
+                <div class="vital-ring" data-vital="pee">
+                    <div class="vital-container">
+                        <svg class="progress-ring" viewBox="0 0 60 60">
+                            <circle class="progress-ring-bg" cx="30" cy="30" r="26"></circle>
+                            <circle class="progress-ring-fill" cx="30" cy="30" r="26"></circle>
+                        </svg>
+                        <div class="vital-icon">
+                            <div class="custom-icon pee-icon">🚽 </div>
+                        </div>
+                        <div class="vital-value">0</div>
+                        <div class="low-warning"></div>
+                    </div>
+                </div>
+
+                <!-- poop Vital -->
+                <div class="vital-ring" data-vital="poop">
+                    <div class="vital-container">
+                        <svg class="progress-ring" viewBox="0 0 60 60">
+                            <circle class="progress-ring-bg" cx="30" cy="30" r="26"></circle>
+                            <circle class="progress-ring-fill" cx="30" cy="30" r="26"></circle>
+                        </svg>
+                        <div class="vital-icon">
+                            <div class="custom-icon poop-icon">💩</div>
+                        </div>
+                        <div class="vital-value">0</div>
+                        <div class="low-warning"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+</html> 

@@ -1,0 +1,490 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden;
+    user-select: none;
+}
+
+/* Root Container - Fixed overlay covering entire viewport */
+.hud-root {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+/* Main HUD Wrapper - Bottom center positioned */
+.hud-wrapper {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: auto;
+    display: block;
+}
+
+/* Mobile HUD Wrapper */
+.hud-wrapper-mobile {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: auto;
+    display: none;
+}
+
+/* Vitals Container - Horizontal flex layout */
+.vitals-container {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+}
+
+/* Mobile Vitals Container - Grid layout */
+.vitals-container-mobile {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+}
+
+/* Vital Ring Component */
+.vital-ring {
+    position: relative;
+    width: 56px;
+    height: 56px;
+}
+
+/* Mobile Vital Ring */
+.hud-wrapper-mobile .vital-ring {
+    width: 48px;
+    height: 48px;
+}
+
+/* Vital Container */
+.vital-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+/* Vital-specific colors and borders */
+.vital-ring[data-vital="health"] .vital-container {
+    border-color: rgba(239, 68, 68, 0.4);
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+}
+
+.vital-ring[data-vital="armor"] .vital-container {
+    border-color: rgba(59, 130, 246, 0.4);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+.vital-ring[data-vital="food"] .vital-container {
+    border-color: rgba(245, 158, 11, 0.4);
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+}
+
+.vital-ring[data-vital="water"] .vital-container {
+    border-color: rgba(14, 165, 233, 0.4);
+    box-shadow: 0 0 20px rgba(14, 165, 233, 0.3);
+}
+
+.vital-ring[data-vital="stress"] .vital-container {
+    border-color: rgba(168, 85, 247, 0.4);
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+}
+
+.vital-ring[data-vital="shower"] .vital-container {
+    border-color: rgba(34, 197, 94, 0.4);
+    box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+}
+
+.vital-ring[data-vital="pee"] .vital-container {
+    border-color: rgba(251, 191, 36, 0.4);
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
+}
+
+.vital-ring[data-vital="poop"] .vital-container {
+    border-color: rgba(120, 53, 15, 0.4);
+    box-shadow: 0 0 20px rgba(120, 53, 15, 0.3);
+}
+
+/* Progress Ring SVG */
+.progress-ring {
+    position: absolute;
+    inset: 4px;
+    transform: rotate(-90deg);
+    width: calc(100% - 8px);
+    height: calc(100% - 8px);
+}
+
+/* Progress Ring Background */
+.progress-ring-bg {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.1);
+    stroke-width: 2;
+}
+
+/* Progress Ring Fill */
+.progress-ring-fill {
+    fill: none;
+    stroke-width: 3;
+    stroke-linecap: round;
+    transition: all 1s ease-out;
+    filter: drop-shadow(0 0 6px currentColor);
+}
+
+/* Vital-specific progress ring colors */
+.vital-ring[data-vital="health"] .progress-ring-fill {
+    stroke: #ef4444;
+}
+
+.vital-ring[data-vital="armor"] .progress-ring-fill {
+    stroke: #3b82f6;
+}
+
+.vital-ring[data-vital="food"] .progress-ring-fill {
+    stroke: #f59e0b;
+}
+
+.vital-ring[data-vital="water"] .progress-ring-fill {
+    stroke: #0ea5e9;
+}
+
+.vital-ring[data-vital="stress"] .progress-ring-fill {
+    stroke: #a855f7;
+}
+
+.vital-ring[data-vital="shower"] .progress-ring-fill {
+    stroke: #22c55e;
+}
+
+.vital-ring[data-vital="pee"] .progress-ring-fill {
+    stroke: #fbbf24;
+}
+
+.vital-ring[data-vital="poop"] .progress-ring-fill {
+    stroke: #78350f;
+}
+
+/* Vital Icon */
+.vital-icon {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    filter: drop-shadow(0 0 4px currentColor);
+    font-size: 16px;
+}
+
+/* Mobile icon size */
+.hud-wrapper-mobile .vital-icon {
+    font-size: 14px;
+}
+
+/* Custom Icons */
+.custom-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+/* Pee Icon (droplets) */
+.pee-icon {
+    gap: 2px;
+}
+
+.droplet {
+    width: 4px;
+    height: 8px;
+    background: currentColor;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+}
+
+.droplet:nth-child(1) {
+    opacity: 0.6;
+}
+
+.droplet:nth-child(2) {
+    opacity: 1;
+}
+
+.droplet:nth-child(3) {
+    opacity: 0.8;
+}
+
+/* Poop Icon */
+.poop-icon {
+    font-size: 12px;
+    line-height: 1;
+}
+
+/* Vital Value Display */
+.vital-value {
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 4px;
+    padding: 2px 6px;
+    border: 1px solid;
+    font-size: 10px;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+/* Vital-specific value colors */
+.vital-ring[data-vital="health"] .vital-value {
+    border-color: rgba(239, 68, 68, 0.6);
+    color: #ef4444;
+}
+
+.vital-ring[data-vital="armor"] .vital-value {
+    border-color: rgba(59, 130, 246, 0.6);
+    color: #3b82f6;
+}
+
+.vital-ring[data-vital="food"] .vital-value {
+    border-color: rgba(245, 158, 11, 0.6);
+    color: #f59e0b;
+}
+
+.vital-ring[data-vital="water"] .vital-value {
+    border-color: rgba(14, 165, 233, 0.6);
+    color: #0ea5e9;
+}
+
+.vital-ring[data-vital="stress"] .vital-value {
+    border-color: rgba(168, 85, 247, 0.6);
+    color: #a855f7;
+}
+
+.vital-ring[data-vital="shower"] .vital-value {
+    border-color: rgba(34, 197, 94, 0.6);
+    color: #22c55e;
+}
+
+.vital-ring[data-vital="pee"] .vital-value {
+    border-color: rgba(251, 191, 36, 0.6);
+    color: #fbbf24;
+}
+
+.vital-ring[data-vital="poop"] .vital-value {
+    border-color: rgba(120, 53, 15, 0.6);
+    color: #78350f;
+}
+
+/* Low Warning Indicator */
+.low-warning {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #ef4444;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.low-warning.active {
+    opacity: 1;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.5;
+        transform: scale(1.2);
+    }
+}
+
+/* Low Vital Animation */
+.vital-ring.low .vital-container {
+    animation: pulse 2s infinite;
+}
+
+/* Mouse Trail Container */
+#mouse-trail-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10000;
+}
+
+/* Mouse Trail Cursor */
+.mouse-trail-cursor {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    pointer-events: none;
+    opacity: 0.8;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.mouse-trail-cursor svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.5));
+}
+
+.mouse-trail-cursor.fade-out {
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hud-wrapper {
+        display: none;
+    }
+    
+    .hud-wrapper-mobile {
+        display: block;
+    }
+    
+    .vital-ring {
+        width: 48px;
+        height: 48px;
+    }
+    
+    .vital-icon {
+        font-size: 14px;
+    }
+    
+    .vital-value {
+        font-size: 8px;
+        padding: 1px 4px;
+    }
+}
+
+@media (max-width: 480px) {
+    .vital-ring {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .vital-icon {
+        font-size: 12px;
+    }
+    
+    .vital-value {
+        font-size: 7px;
+        padding: 1px 3px;
+    }
+    
+    .droplet {
+        width: 3px;
+        height: 6px;
+    }
+    
+    .poop-icon {
+        font-size: 10px;
+    }
+}
+
+/* Animation Classes */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes glow {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    }
+    50% {
+        box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+    }
+}
+
+/* HUD Animation */
+.hud-wrapper,
+.hud-wrapper-mobile {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Neon Glow Effect */
+.vital-container:hover {
+    animation: glow 2s infinite;
+}
+
+/* Stress-specific animations */
+.vital-ring[data-vital="stress"].high-stress .vital-container {
+    animation: stressPulse 1s infinite;
+}
+
+@keyframes stressPulse {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 40px rgba(168, 85, 247, 0.6);
+    }
+}
+
+/* Environmental effects */
+.night-mode .vital-container {
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.15);
+}
+
+.rain-mode .vital-container {
+    box-shadow: 0 0 30px rgba(14, 165, 233, 0.2);
+}
+
+/* Utility Classes */
+.hidden {
+    display: none !important;
+}
+
+.visible {
+    display: block !important;
+}
+
+/* Performance optimizations */
+.vital-container {
+    will-change: transform, box-shadow;
+}
+
+.progress-ring-fill {
+    will-change: stroke-dashoffset;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .vital-container,
+    .progress-ring-fill,
+    .low-warning,
+    .mouse-trail-cursor {
+        animation: none !important;
+        transition: none !important;
+    }
+} 
