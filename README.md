@@ -33,6 +33,13 @@ A comprehensive survival system for vRP (FiveM) that adds realistic health, vita
 - **Particle Effects**: Realistic pee and poop particles
 - **Health Synchronization**: Perfect sync between client and server
 
+### **Enhanced Edible System**
+- **Enhanced Effect Definitions**: Add pee, poop, health, stress, and armour effects to existing system
+- **Smoking Items**: Cigarette and joint with realistic animations
+- **Stress Relief**: Alcohol and smoking items for stress management
+- **Bathroom Effects**: Realistic pee and poop effects from consumption
+- **Advanced Effects**: Health, stress, and vital management through items
+
 ## 📋 Requirements
 
 - **FiveM Server** with vRP framework
@@ -51,12 +58,61 @@ mv vrp_survival /path/to/your/server/resources/
 ```
 
 ### **2. Framework Integration**
-⚠️ **IMPORTANT**: You need to replace/modify your existing vRP framework files:
+⚠️ **IMPORTANT**: You need to **ADD** specific code to your existing vRP framework files:
 
-#### **Replace in `vrp/modules/edible.lua`:**
+#### **Add to `vrp/modules/edible.lua`:**
 ```lua
--- Add this effect definition
--- Add cigarette and joint types
+-- Add these effect definitions
+-- pee effect
+self:defineEffect("pee", function(user, value)
+  print(string.format("Pee effect triggered: user=%s, value=%f", user.id, value))
+  user:varyVital("pee", value)
+end)
+
+-- poop effect
+self:defineEffect("poop", function(user, value)
+  print(string.format("Poop effect triggered: user=%s, value=%f", user.id, value))
+  user:varyVital("poop", value)
+end)
+
+-- health effect
+self:defineEffect("health", function(user, value)
+  vRP.EXT.Survival.remote._varyHealth(user.source, value)
+end)
+
+-- stress effect
+self:defineEffect("stress", function(user, value)
+  print(string.format("Stress effect triggered: user=%s, value=%f", user.id, value))
+  user:varyVital("stress", value)
+end)
+
+-- Add these smoking type definitions
+local cigarette_seq = {
+  -- scoate țigara și aprinde
+  {"amb@world_human_smoking@male@male_a@enter", "enter", 1},
+  -- trage din țigară
+  {"amb@world_human_smoking@male@male_a@idle_a", "idle_c", 1},
+  -- ține țigara în mână
+  {"amb@world_human_smoking@male@male_a@idle_a", "idle_b", 1},
+  -- expiră fumul relaxat
+  {"amb@world_human_smoking@male@male_a@idle_a", "idle_d", 1},
+  -- pune țigara jos / o aruncă
+  {"amb@world_human_smoking@male@male_a@exit", "exit", 1}
+}
+
+local joint_seq = {
+  -- aprinde joint-ul
+  {"amb@world_human_smoking_pot@male@enter", "enter", 1},
+  -- trage fum
+  {"amb@world_human_smoking_pot@male@idle_a", "idle_a", 1},
+  -- ține joint-ul și se relaxează
+  {"amb@world_human_smoking_pot@male@idle_b", "idle_b", 1},
+  -- expiră fumul
+  {"amb@world_human_smoking_pot@male@idle_c", "idle_c", 1},
+  -- aruncă joint-ul
+  {"amb@world_human_smoking_pot@male@exit", "exit", 1}
+}
+
 self:defineType("cigarette", "Smoke cigarette", function(user, edible)
   vRP.EXT.Base.remote._playAnim(user.source, true, cigarette_seq, false)
   vRP.EXT.Audio.remote._playAudioSource(-1, self.cfg.smoke_sound, 1, 0, 0, 0, 30, user.source)
@@ -70,11 +126,25 @@ self:defineType("joint", "Smoke joint", function(user, edible)
 end)
 ```
 
-#### **Replace in `vrp/cfg/edibles.lua`:**
+#### **Add to `vrp/cfg/edibles.lua`:**
 ```lua
 -- Add these items to your edibles configuration
-cigarette = {"cigarette", {stress = -15}, "Cigarette", "A cigarette to reduce stress", 0.1},
-joint = {"joint", {stress = -30, food = -5}, "Joint", "A joint to relax and reduce stress", 0.1},
+-- smoking items
+cigarette = {"drug", {stress = -15}, "Cigarette","A cigarette to reduce stress", 0.1},
+joint = {"drug", {stress = -30, food = -5}, "Joint","A joint to relax and reduce stress", 0.1},  
+
+-- stress relief items
+beer = {"liquid", {water = 20, stress = -20, pee = 30}, "Beer","A cold beer to relax", 0.5},
+whiskey = {"liquid", {water = 30, stress = -30, pee = 40, health = -2}, "Whiskey","Strong drink to reduce stress", 0.5},
+
+-- enhanced drinks with bathroom effects
+coffee = {"liquid", {water = 20, pee = 30, poop = 10}, "Coffee", "", 0.2},
+gocagola = {"liquid", {water = 30, pee = 35, poop = 15}, "Goca Gola","", 0.3},
+redgull = {"liquid", {water = 35, pee = 40, poop = 20}, "RedGull","", 0.3},
+
+-- enhanced food with bathroom effects
+bread = {"solid", {food = 20, water = -5, poop = 15}, "Bread","", 0.5},
+kebab = {"solid", {food = 45, water = -20, health = 5, poop = 30}, "Kebab","", 0.85}
 ```
 
 ### **3. Server Configuration**
@@ -93,10 +163,10 @@ The system automatically creates necessary database tables for vital storage.
 -- Vital decay rates (per update interval)
 decay_rates = {
   water = 1,    -- Water decreases by 1 per interval
-  food = 5,   -- Food decreases by 0.5 per interval
-  shower = 3, -- Hygiene decreases by 0.3 per interval
+  food = 5,   -- Food decreases by 5 per interval
+  shower = 3, -- Hygiene decreases by 3 per interval
   pee = 2,      -- Pee increases by 2 when over threshold
-  poop = 1.5    -- Poop increases by 1.5 when over threshold
+  poop = 2    -- Poop increases by 2 when over threshold
 }
 
 -- Stress thresholds
@@ -128,11 +198,30 @@ health_damage = {
 }
 ```
 
+### **Enhanced Edible Configuration**
+The provided `edible_cfg.lua` includes a comprehensive list of items:
+
+```lua
+-- Drinks with realistic effects
+water = {"liquid", {water = 25, pee = 25}, "Water bottle", "", 0.5},
+coffee = {"liquid", {water = 20, pee = 30, poop = 10}, "Coffee", "", 0.2},
+
+-- Food items
+bread = {"solid", {food = 20, water = -5, poop = 15}, "Bread", "", 0.5},
+kebab = {"solid", {food = 45, water = -20, health = 5, poop = 30}, "Kebab", "", 0.85},
+
+-- Smoking and stress relief
+cigarette = {"drug", {stress = -15}, "Cigarette", "A cigarette to reduce stress", 0.1},
+joint = {"drug", {stress = -30, food = -5}, "Joint", "A joint to relax and reduce stress", 0.1},
+beer = {"liquid", {water = 20, stress = -20, pee = 30}, "Beer", "A cold beer to relax", 0.5}
+```
+
 ### **Shower Zones**
 Add custom shower locations in `client.lua`:
 ```lua
 local showerZones = {
-    vector3(0, 0, 0), -- Example location 1
+    vector3(-1234.5, -1500.2, 4.3), -- Example location 1
+    vector3(345.1, -999.9, 29.2),   -- Example location 2
     -- Add more locations as needed
 }
 ```
@@ -143,6 +232,12 @@ local showerZones = {
 - **`/pee [male/female]`**: Use bathroom (pee vital must be >75)
 - **`/poop`**: Use bathroom (poop vital must be >75)
 - **`/shower`**: Take a shower (shower vital must be <25)
+
+### **Item Consumption**
+- **Food & Drinks**: Consume to restore vitals (with realistic side effects)
+- **Smoking Items**: Reduce stress with realistic animations
+- **Alcohol**: Stress relief with increased bathroom needs
+- **Medication**: Health restoration items
 
 ### **Vital Management**
 - **Water**: Decreases over time, causes damage when low
@@ -166,6 +261,13 @@ local showerZones = {
 - **Server-Side**: Vital logic, damage calculation, data persistence
 - **Database**: vRP cdata system for vital storage
 - **Communication**: Tunnel system for client-server sync
+
+### **Enhanced Edible System**
+- **Code Integration**: Add effects and types to existing edible.lua and edibles.lua files
+- **Advanced Effects**: pee, poop, health, stress, and armour effects
+- **Animation Sequences**: Realistic smoking animations
+- **Audio Integration**: Sound effects for consumption
+- **Vital Integration**: Seamless connection with survival system
 
 ### **Performance Optimizations**
 - **Efficient Threading**: Health monitoring every 50ms
@@ -194,6 +296,20 @@ vrp_survival/
 └── README.md           # This file
 ```
 
+## 🔄 Framework File Integration
+
+### **Code to Add to Your vRP Framework:**
+
+1. **`vrp/modules/edible.lua`** → Add the effect definitions and smoking types
+2. **`vrp/cfg/edibles.lua`** → Add the new items and enhanced effects
+
+### **What This Gives You:**
+- **Enhanced Effect System**: pee, poop, health, stress, armour effects
+- **Smoking Animations**: Realistic cigarette and joint sequences
+- **New Items**: Smoking items, stress relief, and enhanced consumables
+- **Stress Management**: Comprehensive stress relief system
+- **Bathroom Integration**: Realistic consumption effects
+
 ## 🐛 Troubleshooting
 
 ### **Common Issues**
@@ -212,6 +328,12 @@ vrp_survival/
 - Check server update interval in config
 - Verify vital decay rates are set correctly
 - Check if server is processing users
+
+#### **Edible Effects Not Working**
+- Ensure you've added the effect definitions to your edible.lua file
+- Check if the new items are properly added to edibles.lua
+- Verify effect definitions are correct
+- Make sure the survival extension is loaded
 
 ### **Debug Mode**
 Enable debug logging by uncommenting print statements in the code.
@@ -248,7 +370,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Movement restrictions and injured walking
 - Interactive bathroom commands
 - Comprehensive notification system
+- **Enhanced edible system integration**
+- **Smoking and stress relief system**
 
 ---
 
-**Made with for the vRP2 FiveM community**
+**Made for for the vRP2 FiveM community**
