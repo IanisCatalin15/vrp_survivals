@@ -375,4 +375,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Made for for the vRP2 FiveM community**
+**Made for the vRP2 FiveM community**
